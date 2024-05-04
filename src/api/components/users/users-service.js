@@ -1,13 +1,12 @@
 const usersRepository = require('./users-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
-
 /**
  * Get list of users
  * @returns {Array}
  */
-async function getUsers(NOHALL, SZHALL, SRCH, SORTING) {
+async function getUsers(NOHALL, SZHALL, SORTING, SRCH) {
   try {
-    const users = await usersRepository.getUsers(NOHALL, SZHALL, SRCH, SORTING);
+    const users = await usersRepository.getUsers(NOHALL, SZHALL, SORTING, SRCH);
     return users;
   } catch (error) {
     throw new Error(error.message);

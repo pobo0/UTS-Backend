@@ -1,66 +1,53 @@
 const { User } = require('../../../models');
-const { name } = require('../../../models/users-schema');
 
 /**
  * Get a list of users
  * @param {integer} NOHALL - Nomor Halaman
- * @param {integer} NOHALL - Ukuran halaman
- * @param {string} SRCH - search
+ * @param {integer} SZHALL - Ukuran halaman
  * @param {string} SORTING - sort
+ * @param {string} SRCH - search
  * @returns {Promise}
  */
-async function getUsers(NOHALL, SZHALL, SRCH, SORTING) {
+async function getUsers(NOHALL, SZHALL, SORTING, SRCH) {
   try {
     let query = {};
 
-    //fungsi untuk search
     if (SRCH) {
-      const [field, value] = SRCH.split(' : ');
-      // Membagi string pencarian untuk mendapatkan nama kolom dan nilai pencarian
-      if (field && value) {
+      const [FIELD, VALUE] = SRCH.split(':');
+      if (FIELD && VALUE) {
         query = {
-          [field]: {
-            $regex: value,
-            $options: 'i',
-            // Menggunakan nilai pencarian dalam ekspresi reguler untuk pencarian yang tidak peka terhadap huruf besar/kecil dan menerima simbol
-          },
+          [FIELD]: { $regex: VALUE, $options: 'i' },
         };
       }
     }
-    //menentukan banyak nya jumlah total dokumen
-    const ConstTOTAL = await User.countDokuments(query);
 
-    //membuat SORTCRIT
+    const countTOTAL = await User.countDocuments(query);
+
     let SORTCRIT;
-    if (SORTING == 'desc') {
+    if (SORTING === 'desc') {
       SORTCRIT = { name: -1 };
-    } else if (SORTING == 'asc') {
-      SORTCRIT = { name: 1 };
     } else {
       SORTCRIT = { name: 1 };
     }
 
-    //jika sort berisi desc
     if (SORTING.includes(':desc')) {
       const [Namefield, orders] = SORTING.split(' : ');
       if (Namefield === 'name' || Namefield === 'email') {
-        SORTCRIT = { name: -1 };
+        SORTCRIT = { [Namefield]: -1 };
       }
     }
 
-    //mengambil user dari mongoDB
     let users;
     if (SZHALL === 0) {
       users = await User.find(query).sort(SORTCRIT);
     } else {
-      users =
-        (await User.find(query)
-          .sort(SORTCRIT)
-          .limit(SZHALL)
-          .skip(NOHALL - 1)) * SORTCRIT;
+      users = await User.find(query)
+        .sort(SORTCRIT)
+        .limit(SZHALL)
+        .skip(NOHALL - 1);
     }
 
-    const pageTOTAL = math.ceil(ConstTOTAL / SZHALL);
+    const pageTOTAL = Math.ceil(countTOTAL / SZHALL);
     const has_previous_page = NOHALL > 1;
     const has_next_page = SZHALL < pageTOTAL;
 
@@ -79,8 +66,8 @@ async function getUsers(NOHALL, SZHALL, SRCH, SORTING) {
         deleted_at: user.deleted_at,
       })),
     };
-  } catch (eror) {
-    throw new eror(eror.message);
+  } catch (error) {
+    throw new Error(error.message);
   }
 }
 

@@ -6,23 +6,19 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
- * @param {integer} NOHALL - Nomor Halaman
- * @param {integer} NOHALL - Ukuran Halaman
- * @param {string} SRCH - search
- * @param {string} SORTING - sort
  * @returns {object} Response object or pass an error to the next route
  */
 async function getUsers(request, response, next) {
   try {
     const NOHALL = parseInt(request.query.page_number) || 1;
-    const SZHALL = parseInt(request.query.page_size) || 0;
+    const SZHALL = parseInt(request.query.page_size) || null;
+    const SORTING = request.query.sort || 'desc';
     const SRCH = request.query.search || '';
-    const SORTING = request.query || 'asc';
 
-    const users = await usersService.getUsers(NOHALL, SZHALL, SRCH, SORTING);
+    const users = await usersService.getUsers(NOHALL, SZHALL, SORTING, SRCH);
     return response.status(200).json(users);
   } catch (error) {
-    response.status(500).json({ error: error.message });
+    return response.status(500).json({ error: error.message });
   }
 }
 
