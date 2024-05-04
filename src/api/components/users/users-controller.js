@@ -10,10 +10,18 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  */
 async function getUsers(request, response, next) {
   try {
-    const users = await usersService.getUsers();
+    const NOHALL = parseInt(request.query.page_number)||1;
+    const SZHALL = parseInt(request.query.page_size)||0;
+    const SRCH = request.query.search||'';
+    const SORTING = request.query || 'asc';
+
+
+    const users = await usersService.getUsers(NOHALL, SZHALL, SRCH, SORTING );
     return response.status(200).json(users);
-  } catch (error) {
-    return next(error);
+  } 
+  catch (error) 
+  {
+    response.status(500).json({ error: error.message});
   }
 }
 
