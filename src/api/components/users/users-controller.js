@@ -6,8 +6,8 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
- * @param {integer} NOHALL - page_number
- * @param {integer} NOHALL - page_size
+ * @param {integer} NOHALL - Nomor Halaman
+ * @param {integer} NOHALL - Ukuran Halaman
  * @param {string} SRCH - search
  * @param {string} SORTING - sort
  * @returns {object} Response object or pass an error to the next route
