@@ -13,6 +13,7 @@ async function getUsers(NOHALL, SZHALL, SORTING, SRCH) {
     let query = {};
 
     if (SRCH) {
+      //membuat function untuk melakukan search / pencarian
       const [FIELD, VALUE] = SRCH.split(':');
       if (FIELD && VALUE) {
         query = {
@@ -21,7 +22,7 @@ async function getUsers(NOHALL, SZHALL, SORTING, SRCH) {
       }
     }
 
-    const countTOTAL = await User.countDocuments(query);
+    const countTOTAL = await User.countDocuments(query); //
 
     let SORTCRIT;
     if (SORTING === 'desc') {
@@ -37,6 +38,7 @@ async function getUsers(NOHALL, SZHALL, SORTING, SRCH) {
       }
     }
 
+    // mengambil users dari database mongoDB
     let users;
     if (SZHALL === 0) {
       users = await User.find(query).sort(SORTCRIT);

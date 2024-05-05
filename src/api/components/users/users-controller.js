@@ -6,13 +6,18 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  * @param {object} request - Express request object
  * @param {object} response - Express response object
  * @param {object} next - Express route middlewares
+ * @param {integer} NOHALL - page_number
+ * @param {integer} SZHALL - page_size
+ * @param {string} SORTING - sort
+ * @param {string} SRCH - search
  * @returns {object} Response object or pass an error to the next route
  */
 async function getUsers(request, response, next) {
   try {
+    //Menetapkan request query
     const NOHALL = parseInt(request.query.page_number) || 1;
     const SZHALL = parseInt(request.query.page_size) || null;
-    const SORTING = request.query.sort || 'desc';
+    const SORTING = request.query.sort || 'desc'; //menetapkan sort mnejadi 'desc'
     const SRCH = request.query.search || '';
 
     const users = await usersService.getUsers(NOHALL, SZHALL, SORTING, SRCH);
