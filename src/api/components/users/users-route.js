@@ -11,34 +11,46 @@ module.exports = (app) => {
   app.use('/users', route);
 
   // Get list of users
-  route.get('/', authenticationMiddleware, usersControllers.getUsers);
+  route.get(
+    '/',
+    authenticationMiddleware.authenticate,
+    usersControllers.getUsers
+  );
 
   // Create user
   route.post(
     '/',
-    authenticationMiddleware,
+    authenticationMiddleware.authenticate,
     celebrate(usersValidator.createUser),
     usersControllers.createUser
   );
 
   // Get user detail
-  route.get('/:id', authenticationMiddleware, usersControllers.getUser);
+  route.get(
+    '/:id',
+    authenticationMiddleware.authenticate,
+    usersControllers.getUser
+  );
 
   // Update user
   route.put(
     '/:id',
-    authenticationMiddleware,
+    authenticationMiddleware.authenticate,
     celebrate(usersValidator.updateUser),
     usersControllers.updateUser
   );
 
   // Delete user
-  route.delete('/:id', authenticationMiddleware, usersControllers.deleteUser);
+  route.delete(
+    '/:id',
+    authenticationMiddleware.authenticate,
+    usersControllers.deleteUser
+  );
 
   // Change password
   route.post(
     '/:id/change-password',
-    authenticationMiddleware,
+    authenticationMiddleware.authenticate,
     celebrate(usersValidator.changePassword),
     usersControllers.changePassword
   );
